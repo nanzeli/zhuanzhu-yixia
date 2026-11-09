@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f7fa">
+<title>专注一下</title>
+<style>
+:root{--blue:#2563eb;--soft:#dceaff;--ink:#172b4d;--muted:#64748b;--line:#e2e8f0;--bg:#f5f7fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.site{width:min(900px,100%);margin:auto;padding:22px 18px 28px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}h1{font-size:25px;margin:0}.settings{width:40px;height:40px;border:0;border-radius:13px;background:#fff;color:var(--muted);font-size:20px}
+.workspace{display:flex;gap:12px;padding:12px;background:#fff;border:1px solid #edf0f4;border-radius:20px;min-height:690px;box-shadow:0 8px 28px #172b4d0b}
+.side{width:64px;flex:0 0 64px;display:flex;flex-direction:column;gap:10px}.side button{min-height:68px;border:0;border-radius:14px;background:#f3f5f8;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:12px;cursor:pointer}.side button.active{background:var(--soft);color:var(--blue);font-weight:600}.symbol{font-size:21px}
+.content{flex:1;min-width:0;min-height:660px;border-radius:14px;background:#fff;border:1px solid #f0f2f5;display:flex;flex-direction:column;overflow:hidden}
+#wordView{display:flex;flex:1;flex-direction:column;min-height:0}#wordView[hidden],#exerciseView[hidden]{display:none!important}.columns-head,.word-row{display:grid;grid-template-columns:1fr 1fr}.columns-head{min-height:48px;align-items:center;color:var(--muted);font-size:14px;font-weight:600;border-bottom:1px solid var(--line)}.columns-head>div,.word-row>div{text-align:center;min-width:0}.columns-head>div:first-child,.word-row>div:first-child{border-right:1px solid #cbd5e1}.column-title{display:flex;align-items:center;justify-content:center;gap:6px}.eye-toggle{border:0;background:transparent;color:var(--muted);padding:2px;font-size:16px;line-height:1;cursor:pointer}.eye-toggle:focus-visible,.set-dot:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.word-list{flex:1;overflow:auto}.word-row{position:relative;min-height:43px;align-items:stretch;border-bottom:1px solid var(--line)}.word-row:last-child{border-bottom:0}.word-cell{display:flex;align-items:center;justify-content:center;padding:7px 5px;font-size:15px;line-height:1.3;overflow-wrap:anywhere}button.word-cell{width:100%;border:0;background:transparent;color:var(--ink);font:inherit;cursor:pointer}button.word-cell:hover{background:#f7faff}.exercise-view{flex:1;min-height:0;overflow:auto;padding:16px}.exercise-title{font-size:15px;font-weight:650;color:var(--ink);margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}.exercise-heading-left{display:flex;align-items:center;gap:10px;min-width:0}.today-weekday{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap}.plan-settings{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:18px;display:grid;place-items:center;cursor:pointer}.plan-settings:hover{background:#f7faff;color:var(--blue)}.plan-settings:focus-visible{outline:2px solid var(--blue);outline-offset:2px}.plan-editor-backdrop{position:fixed;inset:0;background:#0f172a66;display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.plan-editor-backdrop.open{display:flex}.plan-editor{width:min(560px,100%);max-height:min(85vh,760px);overflow:auto;background:#fff;border-radius:18px;padding:18px;box-shadow:0 18px 60px #0f172a33}.plan-editor h3{margin:0 0 14px;font-size:17px}.plan-editor label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}.plan-day-select{height:42px;width:100%;border:1px solid var(--line);border-radius:10px;padding:0 10px;background:#fff;font-size:14px}.editor-exercise{display:grid;grid-template-columns:1.1fr 1.2fr 65px 34px;gap:7px;align-items:center;margin:10px 0}.editor-exercise input{min-width:0;height:38px;padding:0 8px;font-size:13px}.editor-exercise .remove-exercise{height:36px;border:1px solid #f0c9c6;border-radius:9px;background:#fff5f4;color:#c2413a;font-size:18px;cursor:pointer}.editor-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.editor-actions button{min-height:40px;padding:0 13px;border-radius:10px;font-size:13px;cursor:pointer}.editor-add{border:1px solid var(--line);background:#fff;color:var(--blue)}.editor-save{flex:1;border:0;background:var(--blue);color:#fff}.editor-cancel{border:1px solid var(--line);background:#fff;color:var(--muted)}.editor-empty{font-size:13px;color:var(--muted);padding:14px 0}.plan-editor-hint{font-size:12px;color:var(--muted);margin:9px 0 0}@media(max-width:480px){.editor-exercise{grid-template-columns:1fr 1fr 54px 32px;gap:5px}.editor-exercise input{font-size:12px;padding:0 6px}}.exercise-task{padding:13px 2px;border-bottom:1px solid var(--line)}.exercise-task:last-of-type{border-bottom:0}.exercise-task-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.exercise-name{font-size:15px;font-weight:600}.exercise-task-check{appearance:none;-webkit-appearance:none;width:25px;height:25px;min-width:25px;border:2px solid #94a3b8;border-radius:5px;background:#fff;cursor:pointer;display:inline-grid;place-items:center;margin:0 9px 0 0;vertical-align:middle}.exercise-task-check:checked{background:var(--blue);border-color:var(--blue)}.exercise-task-check:checked:after{content:"✓";color:#fff;font-size:17px;font-weight:700;line-height:1}.exercise-task-check:focus-visible{outline:2px solid var(--blue);outline-offset:2px}.exercise-detail{font-size:12px;color:var(--muted);margin-top:5px}.set-dots{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.set-dot{width:17px;height:17px;padding:0;border:1.5px solid #94a3b8;border-radius:50%;background:#fff;cursor:pointer;flex:0 0 auto}.set-dot.done{background:var(--blue);border-color:var(--blue)}.exercise-progress{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:13px;color:var(--muted)}.progress-track{height:8px;background:#edf1f6;border-radius:99px;overflow:hidden;margin-top:8px}.progress-fill{height:100%;width:0;background:var(--blue);border-radius:99px;transition:width .15s}
+.add-area{padding:12px;border-top:1px solid #f0f2f5}.add-toggle,.primary,.secondary{min-height:42px;border-radius:12px;padding:0 15px;cursor:pointer;font-size:14px}.add-toggle{width:100%;white-space:nowrap;flex:1 1 auto;background:#fff;color:var(--muted);border:1px solid #dbe2ea}.add-actions{display:flex;gap:8px}.add-actions .add-toggle{flex:1}.manage-delete{min-height:42px;padding:0 12px;border:1px solid #dbe2ea;border-radius:12px;background:#fff;color:var(--muted);font-size:13px;cursor:pointer;white-space:nowrap}.manage-delete.active{border-color:#f2b8b5;background:#fff5f4;color:#c2413a}.word-delete{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:27px;height:27px;border:1px solid #f0c9c6;border-radius:8px;background:#fff5f4;color:#c2413a;font-size:15px;cursor:pointer;z-index:1}.word-row.deleting .word-cell:last-child{padding-right:38px}.form{display:grid;gap:9px}input{width:100%;height:42px;padding:0 12px;border:1px solid #dbe2ea;border-radius:10px;font-size:14px}.form-actions{display:flex;gap:8px}.primary{flex:1;border:0;background:var(--blue);color:white}.secondary{background:#fff;border:1px solid #dbe2ea;color:var(--muted)}
+#statsView{display:none;flex:1;min-height:660px;padding:18px;position:relative}#statsView.active{display:block}.stats-head{font-size:18px;font-weight:700;margin:2px 0 18px}.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px;align-content:start}.stats-item{min-width:0;text-align:center}.stats-number{width:100%;height:142px;border:2px solid #d9e0e9;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:750;color:var(--blue);font-variant-numeric:tabular-nums;box-shadow:0 3px 12px #172b4d08}.stats-name{margin-top:9px;font-size:15px;font-weight:650;color:var(--ink);overflow-wrap:anywhere}.stats-today{font-size:11px;color:var(--muted);margin-top:3px}.stats-item.checked .stats-number{border-color:var(--blue);background:#f3f8ff}.stats-add{position:absolute;right:20px;bottom:20px;width:58px;height:58px;border:0;border-radius:50%;background:var(--blue);color:white;font-size:34px;font-weight:300;box-shadow:0 5px 16px #2563eb44;cursor:pointer}.stats-add:focus-visible{outline:3px solid #93c5fd;outline-offset:3px}.stats-hint{font-size:12px;color:var(--muted);margin:16px 0 0}@media(max-width:560px){#statsView{min-height:calc(100vh - 190px);padding:14px}.stats-number{width:100%;height:132px;font-size:48px}.stats-add{right:15px;bottom:15px}}
+.bottom-nav{display:flex;justify-content:space-around;gap:8px;margin-top:14px;background:#fff;padding:10px 8px;border-radius:17px;border:1px solid #edf0f4}.bottom-nav button{flex:1;border:0;background:transparent;color:#94a3b8;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px;font-size:12px}.bottom-nav button.active{color:var(--blue);font-weight:600}.nav-icon{font-size:19px}
+@media(max-width:560px){.site{padding:17px 12px 22px}h1{font-size:22px}.workspace{min-height:calc(100vh - 150px);padding:9px;gap:9px}.content{min-height:calc(100vh - 190px)}.word-cell{font-size:14px}}
+
+.appearance-editor{max-width:420px}.appearance-hint{font-size:13px;color:var(--muted);margin:0 0 16px}.background-swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0 18px}.background-swatch{height:58px;border:2px solid #d9e0e9;border-radius:13px;background:var(--swatch);cursor:pointer}.background-swatch:focus-visible,.background-swatch.selected{outline:3px solid var(--blue);outline-offset:2px;border-color:#fff}.custom-color-label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}.custom-background-color{width:100%;height:44px;padding:4px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+<main class="site">
+<header><h1>专注一下</h1><button class="settings" id="appSettings" type="button" aria-label="设置" title="设置背景颜色">⚙</button></header>
+<section class="workspace">
+<nav class="side" aria-label="学习分类">
+<button class="active" data-section="words"><span class="symbol">▤</span><span>背单词</span></button>
+<button data-section="exercise"><span class="symbol">✦</span><span>运动</span></button>
+</nav>
+<section class="content">
+<div id="wordView">
+<div class="columns-head"><div class="column-title">英文 <button class="eye-toggle" type="button" data-eye="en" aria-label="隐藏英文" title="隐藏英文">👁</button></div><div class="column-title">中文 <button class="eye-toggle" type="button" data-eye="zh" aria-label="隐藏中文" title="隐藏中文">👁</button></div></div>
+<div class="word-list" id="wordList"></div>
+<div class="add-area" id="addArea"><div class="add-actions"><button class="add-toggle" id="showForm">＋ 添加单词</button><button class="manage-delete" id="toggleDelete">删除已背单词</button></div></div>
+</div>
+<!-- 运动入口保留在左侧；这里不显示额外的“运动区域”标题或模块 -->
+<div id="exerciseView" class="exercise-view" hidden>
+  <h2 class="exercise-title"><span class="exercise-heading-left"><span>今日计划</span><span class="today-weekday" id="todayWeekday"></span></span><button class="plan-settings" id="planSettings" type="button" aria-label="上传新计划" title="上传新计划">⚙</button></h2>
+  <div id="exerciseTasks"></div>
+  <div class="exercise-progress"><span>今日完成进度</span><strong id="exerciseProgress">0 / 0</strong></div>
+  <div class="progress-track"><div class="progress-fill" id="exerciseProgressFill"></div></div>
+</div>
+</section>
+</section>
+<section class="content" id="statsView" aria-label="统计页面">
+  <h2 class="stats-head">打卡统计</h2>
+  <div class="stats-grid" id="statsGrid"></div>
+  <p class="stats-hint">点击项目卡片，可记录今天的打卡。</p>
+  <button class="stats-add" id="addStatsProject" type="button" aria-label="添加统计项目" title="添加统计项目">＋</button>
+</section>
+<div class="plan-editor-backdrop" id="planEditorBackdrop" role="dialog" aria-modal="true" aria-labelledby="planEditorTitle">
+  <div class="plan-editor">
+    <h3 id="planEditorTitle">每周运动计划</h3>
+    <label for="planDaySelect">选择星期</label>
+    <select class="plan-day-select" id="planDaySelect">
+      <option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option><option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="0">星期日</option>
+    </select>
+    <div id="editorExerciseRows"></div>
+    <p class="plan-editor-hint">每项可填写名称、训练详情和组数；组数填 0 表示不显示分组圆点。</p>
+    <div class="editor-actions"><button class="editor-add" id="addEditorExercise" type="button">＋ 添加训练项目</button><button class="editor-cancel" id="cancelPlanEditor" type="button">取消</button><button class="editor-save" id="saveWeeklyPlan" type="button">保存本周计划</button></div>
+  </div>
+</div>
+<div class="plan-editor-backdrop" id="setConfirmBackdrop" role="dialog" aria-modal="true" aria-labelledby="setConfirmTitle">
+  <div class="plan-editor" style="max-width:380px">
+    <h3 id="setConfirmTitle">确认完成训练？</h3>
+    <p id="setConfirmMessage" class="appearance-hint">确认后将自动点亮该项目的所有组数圆点。</p>
+    <div class="editor-actions"><button class="editor-cancel" id="cancelSetConfirm" type="button">再检查一下</button><button class="editor-save" id="acceptSetConfirm" type="button">确认完成</button></div>
+  </div>
+</div>
+<div class="plan-editor-backdrop" id="appearanceBackdrop" role="dialog" aria-modal="true" aria-labelledby="appearanceTitle">
+  <div class="plan-editor appearance-editor">
+    <h3 id="appearanceTitle">页面背景颜色</h3>
+    <p class="appearance-hint">选择你喜欢的背景颜色，应用后会自动保存。</p>
+    <div class="background-swatches" aria-label="预设背景颜色">
+      <button type="button" class="background-swatch" data-color="#f5f7fa" style="--swatch:#f5f7fa" aria-label="浅灰色" title="浅灰色"></button>
+      <button type="button" class="background-swatch" data-color="#eef5ff" style="--swatch:#eef5ff" aria-label="淡蓝色" title="淡蓝色"></button>
+      <button type="button" class="background-swatch" data-color="#eff8f1" style="--swatch:#eff8f1" aria-label="淡绿色" title="淡绿色"></button>
+      <button type="button" class="background-swatch" data-color="#fff6e9" style="--swatch:#fff6e9" aria-label="奶油色" title="奶油色"></button>
+      <button type="button" class="background-swatch" data-color="#fff0f3" style="--swatch:#fff0f3" aria-label="淡粉色" title="淡粉色"></button>
+      <button type="button" class="background-swatch" data-color="#f3efff" style="--swatch:#f3efff" aria-label="淡紫色" title="淡紫色"></button>
+    </div>
+    <label class="custom-color-label" for="customBackgroundColor">自定义颜色</label>
+    <input id="customBackgroundColor" class="custom-background-color" type="color" value="#f5f7fa">
+    <div class="editor-actions"><button class="editor-cancel" id="resetBackgroundColor" type="button">恢复默认</button><button class="editor-save" id="closeAppearance" type="button">完成</button></div>
+  </div>
+</div>
+<nav class="bottom-nav"><button class="active" data-main="focus"><span class="nav-icon">◎</span><span>专注</span></button><button data-main="stats"><span class="nav-icon">▥</span><span>统计</span></button><button data-main="mine"><span class="nav-icon">♙</span><span>我的</span></button></nav>
+</main>
+<script>
+const starter=[{en:"Power bank",zh:"充电宝"}];let words;
+try{words=JSON.parse(localStorage.getItem("focus-words")||"null")||starter}catch(e){words=starter}
+const list=document.getElementById("wordList"),area=document.getElementById("addArea");
+const hiddenLanguage={en:false,zh:false};
+let deleteMode=false;
+function save(){try{localStorage.setItem("focus-words",JSON.stringify(words))}catch(e){}}
+function speak(word){if(!("speechSynthesis"in window)){alert("当前浏览器不支持语音播放");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang="en-US";u.rate=.88;speechSynthesis.speak(u)}
+
+// Appearance settings: persist the selected page background color.
+const appearanceBackdrop=document.getElementById("appearanceBackdrop");
+const customBackgroundColor=document.getElementById("customBackgroundColor");
+function applyBackgroundColor(color){if(!/^#[0-9a-fA-F]{6}$/.test(color))return;document.documentElement.style.setProperty("--bg",color);customBackgroundColor.value=color;try{localStorage.setItem("focus-background-color",color)}catch(e){}document.querySelectorAll(".background-swatch").forEach(btn=>btn.classList.toggle("selected",btn.dataset.color.toLowerCase()===color.toLowerCase()))}
+let savedBackground="#f5f7fa";try{savedBackground=localStorage.getItem("focus-background-color")||savedBackground}catch(e){}applyBackgroundColor(savedBackground);
+document.getElementById("appSettings").addEventListener("click",()=>{appearanceBackdrop.classList.add("open")});
+document.querySelectorAll(".background-swatch").forEach(btn=>btn.addEventListener("click",()=>applyBackgroundColor(btn.dataset.color)));
+customBackgroundColor.addEventListener("input",()=>applyBackgroundColor(customBackgroundColor.value));
+document.getElementById("resetBackgroundColor").addEventListener("click",()=>applyBackgroundColor("#f5f7fa"));
+document.getElementById("closeAppearance").addEventListener("click",()=>appearanceBackdrop.classList.remove("open"));
+appearanceBackdrop.addEventListener("click",e=>{if(e.target===appearanceBackdrop)appearanceBackdrop.classList.remove("open")});
+
+function render(){list.innerHTML="";words.forEach((w,index)=>{const row=document.createElement("div");row.className="word-row"+(deleteMode?" deleting":"");const en=document.createElement("button");en.className="word-cell";en.type="button";en.textContent=w.en;en.title="点击听英文发音";en.addEventListener("click",()=>speak(w.en));const zh=document.createElement("div");zh.className="word-cell";zh.textContent=w.zh;row.append(en,zh);if(deleteMode){const del=document.createElement("button");del.type="button";del.className="word-delete";del.textContent="×";del.title="删除单词："+w.en;del.setAttribute("aria-label","删除单词 "+w.en);del.addEventListener("click",()=>{if(confirm("确定删除“"+w.en+" — "+w.zh+"”吗？")){words.splice(index,1);save();render()}});row.append(del)}list.append(row)});applyLanguageMask()}
+function applyLanguageMask(){list.querySelectorAll(".word-row").forEach(row=>{row.children[0].style.color=hiddenLanguage.en?"#fff":"var(--ink)";row.children[1].style.color=hiddenLanguage.zh?"#fff":"var(--ink)"});document.querySelectorAll(".eye-toggle").forEach(btn=>{const key=btn.dataset.eye;btn.textContent=hiddenLanguage[key]?"🙈":"👁";btn.title=(hiddenLanguage[key]?"显示":"隐藏")+(key==="en"?"英文":"中文");btn.setAttribute("aria-label",btn.title)})}
+function toggleDeleteMode(){deleteMode=!deleteMode;render();updateDeleteButton()}
+function updateDeleteButton(){const btn=document.getElementById("toggleDelete");if(!btn)return;btn.classList.toggle("active",deleteMode);btn.textContent=deleteMode?"完成删除":"删除已背单词"}
+function restore(){area.innerHTML='<div class="add-actions"><button class="add-toggle" id="showForm">＋ 添加单词</button><button class="manage-delete" id="toggleDelete">删除已背单词</button></div>';document.getElementById("showForm").addEventListener("click",formShow);
+document.getElementById("toggleDelete").addEventListener("click",toggleDeleteMode);updateDeleteButton()}
+function formShow(){area.innerHTML='<form class="form" id="wordForm"><input id="enInput" placeholder="输入英文" required><input id="zhInput" placeholder="输入中文" required><div class="form-actions"><button class="primary" type="submit">保存</button><button class="secondary" type="button" id="cancel">取消</button></div></form>';document.getElementById("wordForm").addEventListener("submit",e=>{e.preventDefault();const en=document.getElementById("enInput").value.trim(),zh=document.getElementById("zhInput").value.trim();if(!en||!zh)return;words.push({en,zh});save();render();restore()});document.getElementById("cancel").addEventListener("click",restore);document.getElementById("enInput").focus()}
+document.getElementById("showForm").addEventListener("click",formShow);
+document.getElementById("toggleDelete").addEventListener("click",toggleDeleteMode);
+document.querySelectorAll(".eye-toggle").forEach(btn=>btn.addEventListener("click",()=>{const key=btn.dataset.eye;hiddenLanguage[key]=!hiddenLanguage[key];applyLanguageMask()}));
+
+// Weekly recurring exercise plans, editable directly in the app.
+const weekdayNames=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+const defaultPlan=[
+  {id:"pushup",name:"俯卧撑",detail:"3组 × 15次",sets:3},
+  {id:"squat",name:"深蹲",detail:"3组 × 20次",sets:3},
+  {id:"run",name:"慢跑",detail:"20分钟",sets:0}
+];
+const today=new Date();
+const todayKey=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
+const dayIndex=today.getDay();
+document.getElementById("todayWeekday").textContent=weekdayNames[dayIndex];
+let weeklyPlans;
+try{weeklyPlans=JSON.parse(localStorage.getItem("focus-weekly-plans")||"null")}catch(e){weeklyPlans=null}
+if(!weeklyPlans||typeof weeklyPlans!=="object"){
+  weeklyPlans={};weeklyPlans[dayIndex]=defaultPlan.map(x=>({...x}));
+  try{localStorage.setItem("focus-weekly-plans",JSON.stringify(weeklyPlans))}catch(e){}
+}
+let exercisePlan=Array.isArray(weeklyPlans[dayIndex])?weeklyPlans[dayIndex]:[];
+let exerciseDone={};
+try{exerciseDone=JSON.parse(localStorage.getItem("focus-exercise-done-"+todayKey)||"{}")||{}}catch(e){exerciseDone={}}
+let exerciseTaskChecked={};
+try{exerciseTaskChecked=JSON.parse(localStorage.getItem("focus-exercise-task-checked-"+todayKey)||"{}")||{}}catch(e){exerciseTaskChecked={}}
+function saveExerciseDone(){try{localStorage.setItem("focus-exercise-done-"+todayKey,JSON.stringify(exerciseDone))}catch(e){}}
+function saveExerciseTaskChecked(){try{localStorage.setItem("focus-exercise-task-checked-"+todayKey,JSON.stringify(exerciseTaskChecked))}catch(e){};renderStats()}
+
+// Statistics projects: exercise is counted from completed exercise days; added projects are manually checked in.
+let statsProjects=[];try{statsProjects=JSON.parse(localStorage.getItem("focus-stats-projects")||"[]")||[]}catch(e){statsProjects=[]}
+function saveStatsProjects(){try{localStorage.setItem("focus-stats-projects",JSON.stringify(statsProjects))}catch(e){alert("保存失败，请检查浏览器存储空间。")}}
+function countExerciseDays(){let count=0;for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key||!key.startsWith("focus-exercise-task-checked-"))continue;try{const data=JSON.parse(localStorage.getItem(key)||"{}");if(Object.values(data).some(Boolean))count++}catch(e){}}return count}
+function renderStats(){const grid=document.getElementById("statsGrid");if(!grid)return;grid.innerHTML="";const exerciseCount=countExerciseDays();const todayChecked=Object.values(exerciseTaskChecked).some(Boolean);const items=[{id:"exercise",name:"运动",count:exerciseCount,today:todayChecked,automatic:true},...statsProjects];items.forEach(item=>{const wrap=document.createElement("div");wrap.className="stats-item"+(item.today?" checked":"");const card=document.createElement("button");card.type="button";card.className="stats-number";card.textContent=String(item.automatic?item.count:(Array.isArray(item.dates)?item.dates.length:0));card.setAttribute("aria-label",item.name+"，累计打卡"+card.textContent+"天，点击切换今天打卡");card.addEventListener("click",()=>{if(item.automatic){alert("运动项目会根据你在运动计划中勾选完成的项目自动统计。");return}item.dates=Array.isArray(item.dates)?item.dates:[];const idx=item.dates.indexOf(todayKey);if(idx>=0)item.dates.splice(idx,1);else item.dates.push(todayKey);saveStatsProjects();renderStats()});const name=document.createElement("div");name.className="stats-name";name.textContent=item.name;const status=document.createElement("div");status.className="stats-today";status.textContent=item.automatic?(item.today?"今天已完成":"运动计划打卡"):(item.today?"今天已打卡":"点击数字卡片打卡");wrap.append(card,name,status);grid.append(wrap)})}
+document.getElementById("addStatsProject").addEventListener("click",()=>{const name=prompt("请输入要统计的项目名称，例如：读书");if(!name||!name.trim())return;const clean=name.trim();if(clean==="运动"||statsProjects.some(x=>x.name===clean)){alert("这个项目已经存在。");return}statsProjects.push({id:"stats-"+Date.now(),name:clean,dates:[]});saveStatsProjects();renderStats()});
+renderStats();
+function getPlanForDay(day){return Array.isArray(weeklyPlans[day])?weeklyPlans[day]:[]}
+function refreshTodayPlan(){exercisePlan=getPlanForDay(dayIndex);exerciseDone={};exerciseTaskChecked={};try{exerciseDone=JSON.parse(localStorage.getItem("focus-exercise-done-"+todayKey)||"{}")||{};exerciseTaskChecked=JSON.parse(localStorage.getItem("focus-exercise-task-checked-"+todayKey)||"{}")||{}}catch(e){}renderExercises()}
+const editorBackdrop=document.getElementById("planEditorBackdrop");
+const daySelect=document.getElementById("planDaySelect");
+const editorRows=document.getElementById("editorExerciseRows");
+let editorDraft=[];
+function renderEditorRows(){
+  editorRows.innerHTML="";
+  if(!editorDraft.length){const empty=document.createElement("div");empty.className="editor-empty";empty.textContent="这一天还没有训练项目，点击下方“添加训练项目”开始设置。";editorRows.append(empty);return;}
+  editorDraft.forEach((item,index)=>{
+    const row=document.createElement("div");row.className="editor-exercise";
+    const name=document.createElement("input");name.placeholder="运动名称";name.value=item.name||"";name.setAttribute("aria-label","运动名称");name.addEventListener("input",()=>item.name=name.value);
+    const detail=document.createElement("input");detail.placeholder="详情，如 3组×15次";detail.value=item.detail||"";detail.setAttribute("aria-label","训练详情");detail.addEventListener("input",()=>item.detail=detail.value);
+    const sets=document.createElement("input");sets.type="number";sets.min="0";sets.max="99";sets.placeholder="组数";sets.value=String(item.sets||0);sets.setAttribute("aria-label","组数");sets.addEventListener("input",()=>item.sets=Math.max(0,parseInt(sets.value,10)||0));
+    const remove=document.createElement("button");remove.type="button";remove.className="remove-exercise";remove.textContent="×";remove.title="删除此项目";remove.addEventListener("click",()=>{editorDraft.splice(index,1);renderEditorRows()});
+    row.append(name,detail,sets,remove);editorRows.append(row);
+  });
+}
+function openPlanEditor(){daySelect.value=String(dayIndex);loadEditorDay();editorBackdrop.classList.add("open")}
+function loadEditorDay(){editorDraft=getPlanForDay(daySelect.value).map(x=>({...x}));renderEditorRows()}
+daySelect.addEventListener("change",loadEditorDay);
+document.getElementById("planSettings").addEventListener("click",openPlanEditor);
+document.getElementById("addEditorExercise").addEventListener("click",()=>{editorDraft.push({id:"task-"+Date.now()+"-"+Math.random().toString(16).slice(2),name:"",detail:"",sets:0});renderEditorRows();const inputs=editorRows.querySelectorAll("input");if(inputs.length)inputs[inputs.length-3].focus()});
+document.getElementById("cancelPlanEditor").addEventListener("click",()=>editorBackdrop.classList.remove("open"));
+editorBackdrop.addEventListener("click",e=>{if(e.target===editorBackdrop)editorBackdrop.classList.remove("open")});
+document.getElementById("saveWeeklyPlan").addEventListener("click",()=>{
+  const cleaned=editorDraft.map((item,index)=>({id:String(item.id||("day"+daySelect.value+"-task"+index)),name:String(item.name||"").trim(),detail:String(item.detail||"").trim(),sets:Math.max(0,parseInt(item.sets,10)||0)})).filter(item=>item.name);
+  weeklyPlans[daySelect.value]=cleaned;
+  try{localStorage.setItem("focus-weekly-plans",JSON.stringify(weeklyPlans))}catch(e){alert("保存失败，可能是浏览器存储空间不足。");return}
+  if(Number(daySelect.value)===dayIndex)refreshTodayPlan();
+  editorBackdrop.classList.remove("open");
+});
+let pendingSetConfirmation=null;
+document.getElementById("cancelSetConfirm").addEventListener("click",()=>{pendingSetConfirmation=null;document.getElementById("setConfirmBackdrop").classList.remove("open")});
+document.getElementById("acceptSetConfirm").addEventListener("click",()=>{if(!pendingSetConfirmation)return;const {taskId,sets}=pendingSetConfirmation;exerciseDone[taskId]=Array.from({length:sets},(_,i)=>i);exerciseTaskChecked[taskId]=true;saveExerciseDone();saveExerciseTaskChecked();pendingSetConfirmation=null;document.getElementById("setConfirmBackdrop").classList.remove("open");renderExercises()});
+document.getElementById("setConfirmBackdrop").addEventListener("click",e=>{if(e.target.id==="setConfirmBackdrop"){pendingSetConfirmation=null;e.currentTarget.classList.remove("open")}});
+function renderExercises(){
+  const host=document.getElementById("exerciseTasks");
+  host.innerHTML="";
+  if(!exercisePlan.length){const empty=document.createElement("div");empty.className="editor-empty";empty.textContent="今天暂时没有安排运动，点击右上角设置键添加计划。";host.append(empty)}
+  exercisePlan.forEach(task=>{
+    const row=document.createElement("div");row.className="exercise-task";
+    const top=document.createElement("div");top.className="exercise-task-top";
+    const name=document.createElement("div");name.className="exercise-name";
+    const done=Array.isArray(exerciseDone[task.id])?exerciseDone[task.id]:[];
+    // For exercises with set dots, completing every set automatically completes the whole task.
+    if(task.sets>0){
+      const allSetsDone=done.filter(i=>Number.isInteger(i)&&i>=0&&i<task.sets).length>=task.sets;
+      if(!!exerciseTaskChecked[task.id]!==allSetsDone){exerciseTaskChecked[task.id]=allSetsDone;saveExerciseTaskChecked()}
+    }
+    const taskCheck=document.createElement("input");taskCheck.type="checkbox";taskCheck.className="exercise-task-check";taskCheck.checked=!!exerciseTaskChecked[task.id];taskCheck.setAttribute("aria-label","标记"+task.name+"整个项目完成");taskCheck.addEventListener("change",()=>{
+      if(task.sets>0 && taskCheck.checked){
+        taskCheck.checked=false;
+        pendingSetConfirmation={taskId:task.id,taskName:task.name,sets:task.sets};
+        document.getElementById("setConfirmMessage").textContent="确认将「"+task.name+"」标记为完成，并点亮全部 "+task.sets+" 组吗？";
+        document.getElementById("setConfirmBackdrop").classList.add("open");
+        return;
+      }
+      exerciseTaskChecked[task.id]=taskCheck.checked;
+      if(task.sets>0 && !taskCheck.checked)exerciseDone[task.id]=[];
+      saveExerciseDone();saveExerciseTaskChecked();renderExercises();
+    });
+    name.append(taskCheck,document.createTextNode(task.name));top.append(name);
+    if(task.sets>0){
+      const dots=document.createElement("div");dots.className="set-dots";
+      for(let i=0;i<task.sets;i++){
+        const dot=document.createElement("button");dot.type="button";dot.className="set-dot"+(done.includes(i)?" done":"");dot.setAttribute("aria-label",task.name+"第"+(i+1)+"组");dot.setAttribute("aria-pressed",done.includes(i)?"true":"false");
+        dot.title=task.name+" 第"+(i+1)+"组"+(done.includes(i)?"（已完成，点击取消）":"（点击标记完成）");
+        dot.addEventListener("click",()=>{const next=new Set(Array.isArray(exerciseDone[task.id])?exerciseDone[task.id]:[]);if(next.has(i))next.delete(i);else next.add(i);exerciseDone[task.id]=Array.from(next);exerciseTaskChecked[task.id]=next.size>=task.sets;saveExerciseDone();saveExerciseTaskChecked();renderExercises()});
+        dots.append(dot);
+      }
+      top.append(dots);
+    }
+    const detail=document.createElement("div");detail.className="exercise-detail";detail.textContent=task.detail;
+    row.append(top,detail);host.append(row);
+  });
+  // Bottom progress counts completed exercise items only; set dots remain independent.
+  const total=exercisePlan.length;
+  const completed=exercisePlan.reduce((sum,t)=>sum+(exerciseTaskChecked[t.id]?1:0),0);
+  document.getElementById("exerciseProgress").textContent=completed+" / "+total;
+  document.getElementById("exerciseProgressFill").style.width=(total?completed/total*100:0)+"%";
+}
+renderExercises();
+renderStats();
+function showMainPage(page){const focus=page==="focus";document.querySelector(".workspace").style.display=focus?"flex":"none";document.getElementById("statsView").classList.toggle("active",page==="stats");document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.main===page));if(page==="mine"){alert("个人中心页面暂未开放。");showMainPage("focus")}}
+document.querySelectorAll(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>showMainPage(b.dataset.main)));
+document.querySelectorAll(".side button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".side button").forEach(x=>x.classList.toggle("active",x===b));const isWords=b.dataset.section==="words";document.getElementById("wordView").hidden=!isWords;document.getElementById("exerciseView").hidden=isWords}));
+render();
+</script>
+</body>
+</html>
